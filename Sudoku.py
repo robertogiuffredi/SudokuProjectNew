@@ -210,7 +210,7 @@ class Board:
                 j += 1
             i += 1
             j = 0
-        return "game_original_surface"
+        return "game_win"
 
 
     def check_row(self, row, value):
