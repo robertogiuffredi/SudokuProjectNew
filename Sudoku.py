@@ -1,5 +1,5 @@
 import pygame
-from sudoku_generator import *
+from SudokuGenerator import *
 pygame.init()
 # define WIDTH, HEIGHT and create display screen with dimensions and 'sudoku' title
 WIDTH, HEIGHT = 900, 600
