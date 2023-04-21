@@ -128,6 +128,7 @@ class Board:
     def __init__(self, empty_cells):
         self.board = generate_sudoku(9, empty_cells)
 
+# Creates the sudoku play area as 81 buttons in a 9x9 grid
     def create_buttons(self):
         x = 234
         y = 34
@@ -177,6 +178,7 @@ class Board:
     def set_grid_list_button(self, i, button):
         self.grid_list[i] = button
 
+# determines if the game board is filled, if so, checks if the solution is correct
     def submit_button(self, i, value):
         y = i % 9
         x = i // 9
@@ -197,7 +199,7 @@ class Board:
             return "game"
 
 
-
+# checks if the user solution is the correct solution and returns corresponding game state
     def check_if_valid(self):
         global screen
         i = 0
@@ -212,7 +214,7 @@ class Board:
             j = 0
         return "game_win"
 
-
+# determines if each row is correctly solved
     def check_row(self, row, value):
         i = 0
         runs = 0
@@ -224,6 +226,7 @@ class Board:
             i+= 1
         return True
 
+# determines if each column is correctly solved
     def check_col(self, col, value):
         i = 0
         runs = 0
@@ -235,6 +238,7 @@ class Board:
             i += 1
         return True
 
+# determines if each 9x9 box is correctly solved    
     def check_box(self, row, col, value):
         runs = 0
         if row // 3 == 0:
@@ -268,6 +272,7 @@ class Board:
             j = col_start
             i += 1
         return True
+    
 # this is the screen drawer, will create screen and goes into main function logic
 def draw_screen(screen):
     global empty_cells
@@ -338,21 +343,25 @@ def draw_screen(screen):
             if keypad != "":
                 user_number = ""
                 num_input = False
+                # when "up" arrow is pressed
                 if keypad == "up":
                     if cell_number >= 9:
                         current_button.set_color3(black)
                         cell_number -= 9
                         current_button = board.get_grid_list_button(cell_number)
+                # when "down" arrow is pressed
                 elif keypad == "down":
                     if cell_number < 72:
                         current_button.set_color3(black)
                         cell_number += 9
                         current_button = board.get_grid_list_button(cell_number)
+                # when "left" arrow is pressed
                 elif keypad == "left":
                     if cell_number % 9 != 0:
                         current_button.set_color3(black)
                         cell_number -= 1
                         current_button = board.get_grid_list_button(cell_number)
+                # when "right" arrow is pressed
                 elif keypad == "right":
                     if cell_number % 9 != 8:
                         current_button.set_color3(black)
@@ -361,6 +370,7 @@ def draw_screen(screen):
                 keypad = ""
             clickable = current_button.get_clickable()
 
+            # checks to ensure the current object being clicked is supposed to have an interaction when clicked
             if clickable:
                 current_button.set_color3(red)
                 board.update_buttons(cell_number)
@@ -380,13 +390,14 @@ def draw_screen(screen):
                         screen = board.submit_button(cell_number, sketched_text)
                     enter = False
 
-
+# changes display screen when the screen value is changed
     if screen == "game_lose":
         original_surface.fill(white)
         original_surface.blit(home_background, (0, -30))
         restart_button.draw_button()
         display_text("Game Over :(", WIDTH / 2, 120, title_text, black, white)
-
+        
+        # adds restart button to the screen
         if restart_button.hovering(x + 5, y):
             if mouse_click:
                 screen = "home"
@@ -397,7 +408,8 @@ def draw_screen(screen):
         original_surface.blit(home_background, (0, -30))
         exit_button.draw_button()
         display_text("Game Won!!!", WIDTH / 2, 120, title_text, black, white)
-
+        
+        # adds exit button to the screen
         if exit_button.hovering(x + 5, y):
             if mouse_click:
                 exit()
@@ -423,11 +435,13 @@ def main():
     while boolean:
         clock.tick(fps)
         for occurrence in pygame.event.get():
+            # closes program if the "x" in the top right is pressed
             if occurrence.type == pygame.QUIT:
                 boolean = False
             mouse_click = True if occurrence.type == pygame.MOUSEBUTTONDOWN else False
             if pygame.KEYDOWN == occurrence.type:
                 num_input = True
+                # assigns user_number variable to the input whenever the user types a number 1-9
                 if occurrence.key == pygame.K_1 or occurrence.key == pygame.K_KP1:
                     user_number = 1
                 elif occurrence.key == pygame.K_2 or occurrence.key == pygame.K_KP2:
@@ -446,8 +460,10 @@ def main():
                     user_number = 8
                 elif occurrence.key == pygame.K_9 or occurrence.key == pygame.K_KP9:
                     user_number = 9
+                # sets enter variable to true when user presses enter/return so that a penciled-in number can be submitted
                 elif occurrence.key == pygame.K_RETURN:
                     enter = True
+                # detects user input from the up, down, left, and right keys
                 elif pygame.K_UP == occurrence.key:
                     keypad = "up"
                 elif pygame.K_DOWN == occurrence.key:
